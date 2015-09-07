@@ -1,4 +1,5 @@
 
+
 import java.util.*;
 
 import edu.princeton.cs.algs4.StdIn;
@@ -22,14 +23,36 @@ public class DFS {
 			graph[a].add(b);
 		}
 		boolean[] visited = new boolean[graph.length];
+		StdOut.print("Original DFS:");
 		doDFS(graph,0,visited);
-		
+		List<Integer>[] reversedgraph=reversegraph(graph);
+		StdOut.print("Reveresed graph DFS:");
+		doDFS(reversedgraph,0,new boolean[reversedgraph.length]);
+	}
+	
+	private static List<Integer>[] reversegraph(List<Integer>[] graph) {
+		// TODO Auto-generated method stub
+		int u,v;
+		List<Integer>[] reversedgraph = new List[graph.length];
+		for (int i = 0; i < graph.length; i++) {
+			reversedgraph[i]=new ArrayList<>();
+		}
+		for (int i = 0; i < graph.length; i++) {
+			for (int j = 0; j < graph[i].size(); j++) {
+				reversedgraph[graph[i].get(j)].add(i);
+			}
+		}
+		//doDFS(reversedgraph,0,new boolean[reversedgraph.length]);
+		return reversedgraph;
 	}
 
 	private static void doDFS(List<Integer>[] graph,int v, boolean[] visited) {
 		// TODO Auto-generated method stub
 		//boolean[] visited = new boolean[graph.length];
 			StdOut.print("DFS entered for node:"+ v);
+			for (int v = 0; v < visited.length; v++) {
+				
+			}
 			while (!visited[v]) {
 				visited[v]=true;
 				StdOut.print("\n Visited :"+v+"\n \n ");
