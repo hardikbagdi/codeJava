@@ -46,11 +46,11 @@ public class DFS {
 		return reversedgraph;
 	}
 
-	private static void doDFS(List<Integer>[] graph,int v, boolean[] visited) {
+	public static void doDFS(List<Integer>[] graph,int v, boolean[] visited) {
 		// TODO Auto-generated method stub
 		//boolean[] visited = new boolean[graph.length];
 			StdOut.print("DFS entered for node:"+ v);
-			for (int v = 0; v < visited.length; v++) {
+			for ( v = 0; v < visited.length; v++) {
 				
 			}
 			while (!visited[v]) {
