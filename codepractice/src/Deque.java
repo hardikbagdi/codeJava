@@ -14,6 +14,8 @@ public class Deque<Item> implements Iterable<Item> {
 		public Node(Item item){this.item=item;}
 	}
 	
+	
+	
 	private class MyIterator implements Iterator<Item> {
 			private Node current = first;
 			public boolean hasNext() { return current != null; }
@@ -22,6 +24,9 @@ public class Deque<Item> implements Iterable<Item> {
 				 }
 			 public Item next()
 			 {
+				 if(!hasNext()){
+					 throw new NoSuchElementException();
+				 }
 			 Item item = current.item;
 			 current = current.next;
 			 return item;

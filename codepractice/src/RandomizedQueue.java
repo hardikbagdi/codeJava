@@ -8,16 +8,17 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item>implements Iterable<Item>  {
 	private Item[] items;
 	private int size=0;
+	private boolean emptyflag=true;
 	private int last=-1;
 	private class MyIterator implements Iterator<Item> {
 		private int i;
 		int[] indexs;
 		public MyIterator(){
-			i=0;
+			int i2=0;
 		//	Item[] random = items.clone();
 			indexs= new int[size];
-			for (int i = 0; i < indexs.length; i++) {
-				indexs[i]=i;
+			for (int i = 0; i2 < indexs.length; i++) {
+				indexs[i2]=i2;
 			}
 		StdRandom.shuffle(indexs);
 		}
@@ -56,7 +57,7 @@ public class RandomizedQueue<Item>implements Iterable<Item>  {
 	 }
 	
 	 public void enqueue(Item item)           // add the item
-	 {
+	 {	emptyflag=false;
 		 if(item==null){
 			 throw new NullPointerException();
 		 }
@@ -70,14 +71,15 @@ public class RandomizedQueue<Item>implements Iterable<Item>  {
 	 
 	 public Item dequeue()                  
 	 {
-		 if(size==0){
+		 if(size==0 || emptyflag){
 			 throw new NoSuchElementException(); 
 		 }
 		 Item item;
 		 int r= StdRandom.uniform(size);
 		 item= items[r];
-		 items[r]=items[last--];
-	                                    
+		 items[r]=items[last];
+		 items[last]=null;//taking care of loitering
+	               last--;
 	        size--;
 	        
 	        if (size > 0 && size == items.length/4) {
@@ -87,7 +89,7 @@ public class RandomizedQueue<Item>implements Iterable<Item>  {
 	 }
 	 public Item sample()                     
 	 {
-		 if (size==0) {
+		 if(size==0 || emptyflag){
 			 throw new NoSuchElementException();
 		}
 		 int r= StdRandom.uniform(size);
