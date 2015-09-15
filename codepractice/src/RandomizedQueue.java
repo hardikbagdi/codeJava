@@ -1,26 +1,51 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 
 public class RandomizedQueue<Item>implements Iterable<Item>  {
 	private Item[] items;
-	private int size;s
+	private int size=0;
+	private int last=-1;
 	private class MyIterator implements Iterator<Item> {
-		private int current;
+		private int i;
+		int[] indexs;
+		public MyIterator(){
+			i=0;
+		//	Item[] random = items.clone();
+			indexs= new int[size];
+			for (int i = 0; i < indexs.length; i++) {
+				indexs[i]=i;
+			}
+		StdRandom.shuffle(indexs);
+		}
 		public boolean hasNext() {
-			
+			return i<size;
 		}
 		 public void remove() { 
 			 throw new UnsupportedOperationException();
 			 }
 		 public Item next()
 		 {
-		
+			 if (!hasNext()) throw new NoSuchElementException();
+			 return items[indexs[i++]];
 		 }
 	}
-	
+	private void resize(int length) {
+		 Item[] temp = (Item[]) new Object[length];
+	        for (int i = 0; i < size; i++) {
+	            temp[i] = items[i];
+	        }
+	        items = temp;
+	}
 	
 	 public RandomizedQueue()                 // construct an empty randomized queue
-	 {}
+	 {
+		 items = (Item[]) new Object[2];
+		 size=2;
+	 }
 	 public boolean isEmpty()                 // is the queue empty?
 	 {
 		 return size==0;
@@ -29,15 +54,54 @@ public class RandomizedQueue<Item>implements Iterable<Item>  {
 	 {
 		 return size;
 	 }
+	
 	 public void enqueue(Item item)           // add the item
-	 {}
-	 public Item dequeue()                    // remove and return a random item
-	 {}
-	 public Item sample()                     // return (but do not remove) a random item
-	 {}
+	 {
+		 if(item==null){
+			 throw new NullPointerException();
+		 }
+	        if(size==items.length){
+	        	resize(2*items.length);
+	        }
+	        items[++last]=item;
+	        size++;
+		 
+	 }
+	 
+	 public Item dequeue()                  
+	 {
+		 if(size==0){
+			 throw new NoSuchElementException(); 
+		 }
+		 Item item;
+		 int r= StdRandom.uniform(size);
+		 item= items[r];
+		 items[r]=items[last--];
+	                                    
+	        size--;
+	        
+	        if (size > 0 && size == items.length/4) {
+	        	resize(items.length/2); 
+	        }
+	        return item;
+	 }
+	 public Item sample()                     
+	 {
+		 if (size==0) {
+			 throw new NoSuchElementException();
+		}
+		 int r= StdRandom.uniform(size);
+		 return items[r];
+	 }
 	 public Iterator<Item> iterator()         // return an independent iterator over items in random order
-	 {}
+	 {
+		 return new MyIterator();
+	 }
 	 public static void main(String[] args)   // unit testing
-
+	 {
+		 StdOut.print("HelloWorld");
+		 
+		 
+	 }
 }
 
