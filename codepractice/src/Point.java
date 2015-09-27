@@ -49,17 +49,11 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
-    if (this.x-that.x==0) {
-		return Double.POSITIVE_INFINITY;
-	}
-    else if (this.y-that.y==0) {
-		return 0;
-	}
-    else if (this.x==that.x) {
-		return Double.NEGATIVE_INFINITY;
-	}
-    double slope= (that.y-this.y)/(that.x-this.x);
-    return slope;
+    	if(that==null){throw new java.lang.NullPointerException();}
+    	if(that.y==this.y && that.x==this.x) return Double.NEGATIVE_INFINITY;
+    	else if(that.y==this.y) return 0.0;
+        else if(that.x==this.x) return Double.POSITIVE_INFINITY;
+		return ((double)(that.y-this.y))/((that.x-this.x));
     }
 
     /**
@@ -75,9 +69,10 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
+    	if(that==null){throw new NullPointerException();}
         /* YOUR CODE HERE */
     	if (this.y==that.y) {
-			StdOut.println("y equal, returning "+(this.x-that.x));
+//			StdOut.println("y equal, returning "+(this.x-that.x));
     		return (this.x-that.x);
 		}
     	else {
@@ -98,21 +93,13 @@ public class Point implements Comparable<Point> {
     	Comparator<Point> c = new Comparator<Point>() {
 			
 			@Override
-			public int compare(Point o1, Point o2) {
-				
-				double slope1= Point.this.slopeTo(o1);
-				double slope2= Point.this.slopeTo(o2);
-				return (int) (slope2-slope1);
-//				if(this.x!=o1.x){
-//				double slope1=(o1.y-this.y)/(o1.x-this.x);
-//				}
-//				else {
-//					double slope1=Double.POSITIVE_INFINITY;
-//				}
-				// TODO Auto-generated method stub
-			//	return 0;
-			}
-		};
+			public int compare(Point a, Point b) {
+				double slopeA = slopeTo(a);
+				double slopeB = slopeTo(b);
+				if(slopeA>slopeB) return 1;
+				else if(slopeA<slopeB) return -1;
+				return 0;
+			}		};
 		return c;
     }
 
@@ -137,10 +124,7 @@ public class Point implements Comparable<Point> {
      *
      * @throws UnsupportedOperationException if called
      */
-    public int hashCode() {
-        /* DO NOT MODIFY */
-        throw new UnsupportedOperationException();
-    }
+
 
     /**
      * Unit tests the Point data type.
