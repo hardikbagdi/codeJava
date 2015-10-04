@@ -1,7 +1,8 @@
-import javax.security.auth.x500.X500Principal;
+
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 	
@@ -10,7 +11,7 @@ public class KdTree {
 	
 	
 	private int size=0;
-	private Node root;
+	private Node root=null;;
 	private static class Node {
 		   private Point2D p;      // the point
 		  
@@ -44,7 +45,9 @@ public class KdTree {
 	   public void insert(Point2D p)              // add the point to the set (if it is not already in the set)
 	   {
 		  if(p==null) throw new NullPointerException();
+		  System.out.println("inserting fn"+p);
 		  if(root==null){
+			  System.out.println("root null true"+p);
 			  Node n= new Node(p);
 			  root=n;
 			  root.rect= new RectHV(0, 0, 1, 1);
@@ -52,29 +55,37 @@ public class KdTree {
 			  return;
 		  }
 		  else {
-			insert(root,p,orientation);
+			insert(root,p,1);
 		}
 	   
 	   }
 	   private Node insert(Node root, Point2D p, int currentorientation) {
-		
+		   System.out.println("qww");
 		   if(root==null){
+			   System.out.println("this should  print"+p);
 			   size++;
 			    return new Node(p);			   
 		   }
 		   if(p.equals(root.p)){return root;}
-		   int nextOrientation= orientation^1;
+		   int nextOrientation= currentorientation^1;
 		   
-		   int compare= compare(root.p, p, currentorientation);
-		   
+		   int compare= compare(p,root.p, currentorientation);
+		   System.out.println("compare "+compare);
 		 if(compare<0){
+			
+			 System.out.println("compare less");
 			 root.lb=insert(root.lb, p, nextOrientation);
 			 //update recthv
 			 if(root.lb.rect==null){
-				 if(orientation==1){
+				 System.err.println("inside rect"+currentorientation);
+				 if(currentorientation==1){
 					//left-right partition 
+					 System.out.println("inserting "+p);
+					 root.lb.rect= new RectHV(root.rect.xmin(),root.rect.ymin(),root.p.x(),root.rect.ymax());
+					 System.err.println(root.lb.rect);
 				 }
 				 else {
+					 root.lb.rect= new RectHV(root.rect.xmin(),root.rect.ymin(),root.rect.xmax(),root.p.y());
 					//above below partition
 				}
 			 }
@@ -137,9 +148,32 @@ public class KdTree {
 	}
 	   public void draw()                         // draw all points to standard draw 
 	   {
-		   
+		   if(root ==null) return;
+		   draw(root,1);
 	   }
-	   public Iterable<Point2D> range(RectHV rect)             // all points that are inside the rectangle 
+	   
+	   private void draw(Node root, int orientation) {
+		   int nextOrientation = orientation^1;
+		   
+		   StdDraw.setPenColor(StdDraw.BLACK);
+		   StdDraw.setPenRadius(0.01);
+		   StdDraw.point(root.p.x(), root.p.y());
+		   if(orientation==1){
+			   StdDraw.setPenColor(StdDraw.RED);
+			   StdDraw.setPenRadius(0.001);
+			   StdDraw.line(root.p.x(),root.rect.ymin(), root.p.x(),root.rect.ymax());
+		   }
+		   else {
+			   StdDraw.setPenColor(StdDraw.BLUE);
+			   StdDraw.setPenRadius(0.001);
+			   StdDraw.line(root.rect.xmin(),root.p.y(),root.rect.xmax(),root.p.y());
+		}
+		   draw(root.lb,nextOrientation);
+		   draw(root.rt, nextOrientation);
+		// TODO Auto-generated method stub
+		
+	}
+	public Iterable<Point2D> range(RectHV rect)             // all points that are inside the rectangle 
 	   {
 		 if(rect==null) throw new NullPointerException();
 		return null;
@@ -151,6 +185,10 @@ public class KdTree {
 		}
 	   public static void main(String[] args)                  // unit testing of the methods (optional) 
 	   {
+		   KdTree  tree= new KdTree();
+		   tree.insert(new Point2D(0.5, 0.5));
+		   tree.insert(new Point2D(0.25, 0.25));
+		   tree.draw();
 //		   int i=1;
 //		   int j=i^1;
 //		   System.out.println(j);
